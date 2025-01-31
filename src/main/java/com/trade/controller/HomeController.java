@@ -11,4 +11,10 @@ public class HomeController {
         return "Welcome to Crypto Trading System";
 
     }
+
+    @GetMapping("/api")
+    public String secure(){
+        return "Welcome to the Secure Crypto Trading System";
+
+    }
 }
