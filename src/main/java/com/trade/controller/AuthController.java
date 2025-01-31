@@ -1,5 +1,6 @@
 package com.trade.controller;
 
+import com.trade.config.JwtProvider;
 import com.trade.model.User;
 import com.trade.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class AuthController {
     private UserRepository userRepository;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody User user) throws Exception {
+    public ResponseEntity<AuthResponse> register(@RequestBody User user) throws Exception {
 
         User isEmailExist = userRepository.findByEmail(user.getEmail());
 
@@ -43,6 +44,8 @@ public class AuthController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(auth);
+
+        String jwt = JwtProvider.generateToken(auth);
 
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
 
