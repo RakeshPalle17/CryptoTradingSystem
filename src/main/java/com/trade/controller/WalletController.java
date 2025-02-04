@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.trade.model.Order;
 import com.trade.model.User;
 import com.trade.model.Wallet;
 import com.trade.model.WalletTransaction;
+import com.trade.service.OrderService;
 import com.trade.service.UserService;
 import com.trade.service.WalletService;
 
@@ -25,6 +27,7 @@ public class WalletController {
     
     @Autowired
     private UserService userService;
+    
     @Autowired
     private OrderService orderService;
 
@@ -51,7 +54,7 @@ public class WalletController {
     public ResponseEntity<Wallet> payOrderPayment(@RequestHeader("Authorization") String jwt,
     @PathVariable Long orderId) throws Exception {
         User user = userService.findUserProfileByJwt(jwt);
-        Order order = orderService.findOrderById(orderId);
+        Order order = orderService.getOrderById(orderId);
         Wallet wallet = walletService.payOrderPayment(order, user);
 
         return new ResponseEntity<>(wallet, HttpStatus.ACCEPTED);
