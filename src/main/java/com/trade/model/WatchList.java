@@ -1,30 +1,28 @@
 package com.trade.model;
 
-import java.time.LocalDateTime;
-
-import com.trade.domain.WithDrawalStatus;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 
-@Data
 @Entity
-public class Withdrawal {
+@Data
+public class WatchList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private WithDrawalStatus status;
-    private Long amount;
-
-    @ManyToOne
+    @OneToOne
     private User user;
 
-    private LocalDateTime date = LocalDateTime.now();
+    @ManyToMany
+    private List<Coin> coins = new ArrayList<>();
 
 }
