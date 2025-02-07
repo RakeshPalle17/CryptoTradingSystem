@@ -1,0 +1,14 @@
+package com.trade.service;
+
+import com.trade.model.PaymentDetails;
+import com.trade.model.User;
+
+public interface PaymentDetailsService {
+    public PaymentDetails addPaymentDetails(String accountNumber,
+     String bankName, String accountHolderName, String ifscCode, User user); 
+
+    public PaymentDetails getUsersPaymentDetails(User user);
+    
+
+
+}
