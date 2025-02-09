@@ -1,5 +1,7 @@
 package com.trade.service;
 
+import com.razorpay.RazorpayException;
+import com.stripe.exception.StripeException;
 import com.trade.domain.PaymentMethod;
 import com.trade.model.PaymentOrder;
 import com.trade.model.User;
@@ -9,11 +11,9 @@ public interface PaymentService {
 
     PaymentOrder createPaymentOrder(User user, Long amount, PaymentMethod paymentMethod);
     PaymentOrder getPaymentOrderById(Long id);
-    Boolean proceedPaymentOrder(PaymentOrder paymentOrder, String paymentId);
-
+    Boolean proceedPaymentOrder(PaymentOrder paymentOrder, String paymentId) throws RazorpayException;
     PaymentResponse createRazorpayPaymentLink(User user, Long amount);
-
-    PaymentResponse createStripePaymentLink(User user, Long amount, Long orderId);
+    PaymentResponse createStripePaymentLink(User user, Long amount, Long orderId) throws StripeException;
 
 
 
