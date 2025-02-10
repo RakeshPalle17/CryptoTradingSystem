@@ -20,8 +20,8 @@ public class JwtProvider {
         String roles = populateAuthorities(authorities);
 
         String jwt = Jwts.builder()
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime()+86400000))
+                .issuedAt(new Date())
+                .expiration(new Date(new Date().getTime()+86400000))
                 .claim("email", auth.getName())
                 .claim("authorities", roles)
                 .signWith(key)
@@ -32,7 +32,7 @@ public class JwtProvider {
     public static String getEmailFromToken(String token){
         token = token.substring(7);
 
-        Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJwt(token).getBody();
+        Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
         String email = String.valueOf(claims.get("email"));
 
         return email;
