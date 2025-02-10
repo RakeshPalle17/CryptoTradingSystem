@@ -1,12 +1,15 @@
 package com.trade.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.trade.model.PaymentDetails;
 import com.trade.model.User;
 import com.trade.repository.PaymentDetailRepository;
 
+@Service
 public class PaymentDetailsServiceImpl implements PaymentDetailsService {
+
     @Autowired
     private PaymentDetailRepository paymentDetailsRepository;
 

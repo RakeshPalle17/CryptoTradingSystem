@@ -3,7 +3,6 @@ package com.trade.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,33 +13,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.trade.domain.OrderStatus;
 import com.trade.domain.OrderType;
-import com.trade.domain.WalletTransactionType;
 import com.trade.model.Coin;
 import com.trade.model.Order;
-import com.trade.model.OrderItem;
 import com.trade.model.User;
 import com.trade.request.CreateOrderRequest;
 import com.trade.service.CoinService;
 import com.trade.service.OrderService;
 import com.trade.service.UserService;
-// import com.trade.service.WalletTransactionService;
+
 
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
+
     @Autowired
     private OrderService orderService;
-    @Autowired
 
+    @Autowired
     private UserService userSerivce;
 
     @Autowired
     private CoinService coinService;
 
-    // @Autowired
-    // private WalletTransactionService walletTransactionService;
 
     @PostMapping("/pay")
     public ResponseEntity<Order> payOrderPayment(

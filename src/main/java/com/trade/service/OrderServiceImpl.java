@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.trade.domain.OrderStatus;
@@ -17,6 +18,7 @@ import com.trade.model.User;
 import com.trade.repository.OrderItemRepository;
 import com.trade.repository.OrderRepository;
 
+@Service
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
@@ -30,8 +32,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private AssetService assetService;
 
-    @Autowired
-    private OrderService orderService;
 
     @Override
     public Order createOrder(User user, OrderItem orderItem, OrderType orderType) {

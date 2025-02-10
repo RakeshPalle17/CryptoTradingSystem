@@ -18,6 +18,7 @@ import com.trade.service.UserService;
 @RestController
 @RequestMapping("/api")
 public class PaymentDetailController {
+
     @Autowired
     private PaymentDetailsService paymentDetailService;
 
