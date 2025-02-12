@@ -1,37 +1,40 @@
 package com.trade.controller;
 
-import com.trade.domain.WalletTransactionType;
+import com.trade.model.User;
 import com.trade.model.Wallet;
 import com.trade.model.WalletTransaction;
+import com.trade.service.UserService;
+import com.trade.service.WalletService;
 import com.trade.service.WalletTransactionService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/wallet-transactions")
 public class WalletTransactionController {
+
+    @Autowired
+    private WalletService walletService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private WalletTransactionService walletTransactionService;
 
-    @PostMapping
-    public ResponseEntity<WalletTransaction> createWalletTransaction(
-            @RequestParam Long walletId,
-            @RequestParam WalletTransactionType type,
-            @RequestParam String transferId,
-            @RequestParam String description) {
+    @GetMapping("/api/transactions")
+    public ResponseEntity<List<WalletTransaction>> getUserWallet(
+            @RequestHeader("Authorization") String jwt) throws Exception {
 
-        Wallet wallet = walletTransactionService.getWalletById(walletId);
-        WalletTransaction walletTransaction = walletTransactionService.createWalletTransaction(
-                wallet, type, transferId, description, walletId);
+        User user = userService.findUserProfileByJwt(jwt);
+        Wallet wallet = walletService.getUserWallet(user);
+        List<WalletTransaction> transactionList = walletTransactionService.getTransactionsByWallet(wallet);
 
-        return ResponseEntity.ok(walletTransaction);
-    }
+        return new ResponseEntity<>(transactionList, HttpStatus.ACCEPTED);
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Wallet> getWalletTransactionById(@PathVariable Long id) {
-        Wallet wallet = walletTransactionService.getWalletById(id);
-        return ResponseEntity.ok(wallet);
     }
 }

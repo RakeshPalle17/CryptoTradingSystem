@@ -4,6 +4,9 @@ import com.trade.domain.WalletTransactionType;
 import com.trade.model.Wallet;
 import com.trade.model.WalletTransaction;
 import com.trade.repository.WalletTransactionRepository;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +29,11 @@ public class WalletTransactionServiceImpl implements WalletTransactionService {
         return walletTransactionRepository.save(walletTransaction);
     }
 
+
     @Override
-    public Wallet getWalletById(Long id) {
-        WalletTransaction walletTransaction = walletTransactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
-        return walletTransaction.getWallet();
+    public List<WalletTransaction> getTransactionsByWallet(Wallet wallet) {
+        return walletTransactionRepository.findByWallet(wallet);
     }
+
+
 }
