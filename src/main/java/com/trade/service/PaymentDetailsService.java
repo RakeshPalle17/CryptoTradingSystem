@@ -5,10 +5,9 @@ import com.trade.model.User;
 
 public interface PaymentDetailsService {
     public PaymentDetails addPaymentDetails(String accountNumber,
-     String bankName, String accountHolderName, String ifscCode, User user); 
+    String accountHolderName, String ifscCode, String bankName, User user); 
 
     public PaymentDetails getUsersPaymentDetails(User user);
     
-
 
 }

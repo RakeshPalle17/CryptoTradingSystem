@@ -8,6 +8,7 @@ import com.trade.response.AuthResponse;
 import com.trade.service.CustomUserDetailsService;
 import com.trade.service.EmailService;
 import com.trade.service.TwoFactorOTPService;
+import com.trade.service.WatchListService;
 import com.trade.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,12 +33,15 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private WatchListService watchListService;
+
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> register(@RequestBody User user) throws Exception {
 
         User isEmailExist = userRepository.findByEmail(user.getEmail());
 
-        if(isEmailExist != null){
+        if (isEmailExist != null) {
             throw new Exception("Email address is already used");
         }
 
@@ -47,12 +51,11 @@ public class AuthController {
         newUser.setFullName(user.getFullName());
 
         User savedUser = userRepository.save(newUser);
-
+        watchListService.createWatchList(savedUser);
 
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 user.getEmail(),
-                user.getPassword()
-        );
+                user.getPassword());
 
         SecurityContextHolder.getContext().setAuthentication(auth);
 
@@ -79,7 +82,7 @@ public class AuthController {
 
         User authUser = userRepository.findByEmail(userName);
 
-        if(user.getTwoFactorAuth().isEnabled()){
+        if (user.getTwoFactorAuth().isEnabled()) {
             AuthResponse authResponse = new AuthResponse();
             authResponse.setMessage("TwoFactorAuth is Enabled");
             authResponse.setTwoFactorAuthEnabled(true);
@@ -87,7 +90,7 @@ public class AuthController {
 
             TwoFactorOTP oldTwoFactorOTP = twoFactorOTPService.findByUserId(authUser.getId());
 
-            if(oldTwoFactorOTP != null){
+            if (oldTwoFactorOTP != null) {
                 twoFactorOTPService.deleteTwoFactorOtp(oldTwoFactorOTP);
             }
 
@@ -96,7 +99,6 @@ public class AuthController {
             authResponse.setSession(newTwoFactorOTP.getId());
 
             emailService.sendVerificationOTPEmail(userName, otp);
-
 
             return new ResponseEntity<>(authResponse, HttpStatus.ACCEPTED);
         }
@@ -112,21 +114,22 @@ public class AuthController {
 
     private Authentication authenticate(String userName, String password) {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(userName);
-        if(userDetails == null){
+        if (userDetails == null) {
             throw new BadCredentialsException("Invalid user name");
         }
-        if(!password.equals(userDetails.getPassword())){
+        if (!password.equals(userDetails.getPassword())) {
             throw new BadCredentialsException("Invalid password");
         }
         return new UsernamePasswordAuthenticationToken(userName, password, userDetails.getAuthorities());
     }
 
     @PostMapping("/two-factor/otp/{otp}")
-    public ResponseEntity<AuthResponse> verifySigninOTP(@PathVariable String otp, @RequestParam String id) throws Exception {
+    public ResponseEntity<AuthResponse> verifySigninOTP(@PathVariable String otp, @RequestParam String id)
+            throws Exception {
 
         TwoFactorOTP twoFactorOTP = twoFactorOTPService.findById(id);
 
-        if(twoFactorOTPService.verifyTwoFactorOtp(twoFactorOTP, otp)){
+        if (twoFactorOTPService.verifyTwoFactorOtp(twoFactorOTP, otp)) {
             AuthResponse authResponse = new AuthResponse();
             authResponse.setMessage("Two Factor Authentication (2FA) is Successful");
             authResponse.setJwt(twoFactorOTP.getJwt());

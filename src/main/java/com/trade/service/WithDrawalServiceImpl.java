@@ -1,7 +1,5 @@
 package com.trade.service;
 
-import java.lang.StackWalker.Option;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -13,8 +11,6 @@ import com.trade.domain.WithDrawalStatus;
 import com.trade.model.User;
 import com.trade.model.Withdrawal;
 import com.trade.repository.WithDrawalRepository;
-
-import lombok.With;
 
 @Service
 public class WithDrawalServiceImpl implements WithDrawalService {

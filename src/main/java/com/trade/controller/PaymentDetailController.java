@@ -37,7 +37,7 @@ public class PaymentDetailController {
                 paymentDetailsRequest.getIfsc(),
                 paymentDetailsRequest.getBankName(),
                 user);
-
+        
         return new ResponseEntity<>(paymentDetails, HttpStatus.CREATED);
     }
 

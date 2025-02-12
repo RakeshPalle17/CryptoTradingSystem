@@ -2,6 +2,8 @@ package com.trade.controller;
 
 import java.util.List;
 
+import com.trade.domain.WalletTransactionType;
+import com.trade.service.WalletTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.trade.model.User;
 import com.trade.model.Wallet;
+import com.trade.model.WalletTransaction;
 import com.trade.model.Withdrawal;
 import com.trade.service.UserService;
 import com.trade.service.WalletService;
@@ -31,9 +34,9 @@ public class WithDrawalController {
     @Autowired
     private UserService userService;
 
-    // @Autowired
-    // private WalletTransactionService walletTransactionService;
-    
+    @Autowired
+    private WalletTransactionService walletTransactionService;
+
     @PostMapping("/api/withdrawal/{amount}")
     public ResponseEntity<?> withdrawalRequest(
             @PathVariable Long amount,
@@ -44,13 +47,11 @@ public class WithDrawalController {
         Withdrawal withdrawal = withdrawalService.requestWithDrawal(amount, user);
         walletService.addBalance(userWallet, -withdrawal.getAmount());
 
-        // WalletTransaction walletTransaction =
-        // walletTransactionService.createWalletTransaction(
-        // userWallet,
-        // WalletTransactionType.WITHDRAWAL, null,
-        // "Bank Account Withdrawal",
-        // withdrawal.getAmount()
-        // );
+        WalletTransaction walletTransaction = walletTransactionService.createWalletTransaction(
+                userWallet,
+                WalletTransactionType.WITHDRAWAL, null,
+                "Bank Account Withdrawal",
+                withdrawal.getAmount());
 
         return new ResponseEntity<>(withdrawal, HttpStatus.OK);
     }

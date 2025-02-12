@@ -10,11 +10,13 @@ import com.trade.response.PaymentResponse;
 public interface PaymentService {
 
     PaymentOrder createPaymentOrder(User user, Long amount, PaymentMethod paymentMethod);
+
     PaymentOrder getPaymentOrderById(Long id);
+
     Boolean proceedPaymentOrder(PaymentOrder paymentOrder, String paymentId) throws RazorpayException;
-    PaymentResponse createRazorpayPaymentLink(User user, Long amount);
+
+    PaymentResponse createRazorpayPaymentLink(User user, Long amount, Long orderId);
+
     PaymentResponse createStripePaymentLink(User user, Long amount, Long orderId) throws StripeException;
-
-
 
 }

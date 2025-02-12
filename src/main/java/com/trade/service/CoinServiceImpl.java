@@ -1,7 +1,7 @@
 package com.trade.service;
 
 import java.util.List;
-import java.util.Optional; 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -49,7 +49,7 @@ public class CoinServiceImpl implements CoinService {
 
     @Override
     public String getMarketChart(String coinId, int days) {
-        String url = "https://api.coingecko.com/api/v3/coins/" + coinId + "+markets?vs_currency=usd&days=" + days;
+        String url = "https://api.coingecko.com/api/v3/coins/" + coinId + "/market_chart?vs_currency=usd&days=" + days;
         RestTemplate restTemplate = new RestTemplate();
 
         try {
@@ -89,11 +89,11 @@ public class CoinServiceImpl implements CoinService {
             coin.setTotalVolume(marketData.get("total_volume").get("usd").asLong());
             coin.setHigh24h(marketData.get("high_24h").get("usd").asDouble());
             coin.setLow24h(marketData.get("low_24h").get("usd").asDouble());
-            coin.setPriceChange24h(marketData.get("price_change2_4h").get("usd").asDouble());
-            coin.setPriceChangePercentage24h(marketData.get("price_change2_24h").get("usd").asDouble());
+            coin.setPriceChange24h(marketData.get("price_change_24h").asDouble());
+            coin.setPriceChangePercentage24h(marketData.get("price_change_percentage_24h").asDouble());
             coin.setMarketCapChange24h(marketData.get("market_cap_change_24h").asLong());
             coin.setMarketCapChangePercentage24h(marketData.get("market_cap_change_percentage_24h").asDouble());
-            coin.setTotalSupply(marketData.get("total_supply").get("usd").asLong());
+            coin.setTotalSupply(marketData.get("total_supply").asLong());
 
             coinRepository.save(coin);
 
@@ -107,7 +107,7 @@ public class CoinServiceImpl implements CoinService {
     @Override
     public Coin findById(String coinId) {
         Optional<Coin> coinOptional = coinRepository.findById(coinId);
-        
+
         if (coinOptional.isEmpty()) {
             throw new RuntimeException("Coin not found");
         }
@@ -150,8 +150,8 @@ public class CoinServiceImpl implements CoinService {
     }
 
     @Override
-    public String getTreadingCoins() {
-        String url = "https://api.coingecko.com/api/v3/search/treading";
+    public String getTrendingCoins() {
+        String url = "https://api.coingecko.com/api/v3/search/trending";
         RestTemplate restTemplate = new RestTemplate();
 
         try {

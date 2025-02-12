@@ -18,6 +18,6 @@ public interface CoinService {
 
     String getTop50ByMarketCapRank();
 
-    String getTreadingCoins();
+    String getTrendingCoins();
            
 }

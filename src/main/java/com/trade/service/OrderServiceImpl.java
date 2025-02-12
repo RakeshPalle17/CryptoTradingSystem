@@ -106,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
         Asset assetToSell = assetService.findAssetByUserIdAndCoinId(user.getId(), coin.getId());
         double buyPrice = assetToSell.getBuyPrice();
 
-        if (assetToSell != null) {
+        {
 
             OrderItem orderItem = createOrderItem(coin, quantity, buyPrice, sellPrice);
             Order order = createOrder(user, orderItem, OrderType.SELL);
@@ -127,7 +127,6 @@ public class OrderServiceImpl implements OrderService {
             }
             throw new RuntimeException("Insufficient quantity to sell");
         }
-        throw new RuntimeException("Asset not found");
     }
 
     @Override

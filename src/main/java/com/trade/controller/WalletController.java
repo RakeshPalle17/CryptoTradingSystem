@@ -1,7 +1,6 @@
 package com.trade.controller;
 
 import com.trade.model.*;
-import com.trade.response.PaymentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +10,8 @@ import com.trade.service.OrderService;
 import com.trade.service.PaymentService;
 import com.trade.service.UserService;
 import com.trade.service.WalletService;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/wallet")
@@ -27,7 +28,7 @@ public class WalletController {
     @Autowired
     private PaymentService paymentService;
 
-    @GetMapping("/api/wallet")
+    @GetMapping()
     public ResponseEntity<Wallet> getUserWallet(@RequestHeader("Authorization") String jwt) throws Exception {
 
         User user = userService.findUserProfileByJwt(jwt);
@@ -36,7 +37,7 @@ public class WalletController {
         return new ResponseEntity<>(wallet, HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/api/wallet/{walletId}/transfer")
+    @PutMapping("/{walletId}/transfer")
     public ResponseEntity<Wallet> walletToWalletTransfer(@RequestHeader("Authorization") String jwt,
             @PathVariable Long walletId,
             @RequestBody WalletTransaction request) throws Exception {
@@ -48,7 +49,7 @@ public class WalletController {
         return new ResponseEntity<>(wallet, HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/api/wallet/order/{orderId}/pay")
+    @PutMapping("/order/{orderId}/pay")
     public ResponseEntity<Wallet> payOrderPayment(@RequestHeader("Authorization") String jwt,
             @PathVariable Long orderId) throws Exception {
 
@@ -59,15 +60,19 @@ public class WalletController {
         return new ResponseEntity<>(wallet, HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/api/wallet/deposit")
+    @PutMapping("/deposit")
     public ResponseEntity<Wallet> addBalanceToWallet(@RequestHeader("Authorization") String jwt,
             @RequestParam(name = "order_id") Long orderId,
-            @RequestParam(name = "payment_id") String paymentId) throws Exception {
+            @RequestParam(required = false, name = "payment_id") String paymentId) throws Exception {
 
         User user = userService.findUserProfileByJwt(jwt);
         Wallet wallet = walletService.getUserWallet(user);
         PaymentOrder order = paymentService.getPaymentOrderById(orderId);
         Boolean status = paymentService.proceedPaymentOrder(order, paymentId);
+
+        if(wallet.getBalance() == null){
+            wallet.setBalance(BigDecimal.valueOf(0));
+        }
 
         if (status) {
             wallet = walletService.addBalance(wallet, order.getAmount());

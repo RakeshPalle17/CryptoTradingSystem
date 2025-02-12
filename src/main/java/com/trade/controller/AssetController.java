@@ -16,7 +16,7 @@ import com.trade.service.AssetService;
 import com.trade.service.UserService;
 
 @RestController
-@RequestMapping("/api/assets")
+@RequestMapping("/api/asset")
 public class AssetController {
 
     @Autowired
