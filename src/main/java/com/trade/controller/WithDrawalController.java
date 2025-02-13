@@ -3,7 +3,7 @@ package com.trade.controller;
 import java.util.List;
 
 import com.trade.domain.WalletTransactionType;
-import com.trade.service.WalletTransactionService;
+import com.trade.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public class WithDrawalController {
     private UserService userService;
 
     @Autowired
-    private WalletTransactionService walletTransactionService;
+    private TransactionService transactionService;
 
     @PostMapping("/api/withdrawal/{amount}")
     public ResponseEntity<?> withdrawalRequest(
@@ -47,11 +47,11 @@ public class WithDrawalController {
         Withdrawal withdrawal = withdrawalService.requestWithDrawal(amount, user);
         walletService.addBalance(userWallet, -withdrawal.getAmount());
 
-        WalletTransaction walletTransaction = walletTransactionService.createWalletTransaction(
+        transactionService.createWalletTransaction(
                 userWallet,
                 WalletTransactionType.WITHDRAWAL, null,
                 "Bank Account Withdrawal",
-                withdrawal.getAmount());
+                amount);
 
         return new ResponseEntity<>(withdrawal, HttpStatus.OK);
     }

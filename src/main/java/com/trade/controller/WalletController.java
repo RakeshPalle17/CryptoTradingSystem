@@ -1,15 +1,12 @@
 package com.trade.controller;
 
+import com.trade.domain.WalletTransactionType;
 import com.trade.model.*;
+import com.trade.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.trade.service.OrderService;
-import com.trade.service.PaymentService;
-import com.trade.service.UserService;
-import com.trade.service.WalletService;
 
 import java.math.BigDecimal;
 
@@ -28,6 +25,9 @@ public class WalletController {
     @Autowired
     private PaymentService paymentService;
 
+    @Autowired
+    private TransactionService transactionService;
+
     @GetMapping()
     public ResponseEntity<Wallet> getUserWallet(@RequestHeader("Authorization") String jwt) throws Exception {
 
@@ -45,6 +45,13 @@ public class WalletController {
         User sendUser = userService.findUserProfileByJwt(jwt);
         Wallet recevierWallet = walletService.findWalletById(walletId);
         Wallet wallet = walletService.walletToWalletTransfer(sendUser, recevierWallet, request.getAmount());
+
+        transactionService.createWalletTransaction( wallet,
+                WalletTransactionType.WALLET_TRANSFER,
+                recevierWallet.getId(),
+                request.getPurpose(),
+                request.getAmount()
+        );
 
         return new ResponseEntity<>(wallet, HttpStatus.ACCEPTED);
     }

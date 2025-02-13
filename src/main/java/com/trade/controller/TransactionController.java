@@ -5,7 +5,7 @@ import com.trade.model.Wallet;
 import com.trade.model.WalletTransaction;
 import com.trade.service.UserService;
 import com.trade.service.WalletService;
-import com.trade.service.WalletTransactionService;
+import com.trade.service.TransactionService;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class WalletTransactionController {
+public class TransactionController {
 
     @Autowired
     private WalletService walletService;
@@ -24,7 +24,7 @@ public class WalletTransactionController {
     private UserService userService;
 
     @Autowired
-    private WalletTransactionService walletTransactionService;
+    private TransactionService transactionService;
 
     @GetMapping("/api/transactions")
     public ResponseEntity<List<WalletTransaction>> getUserWallet(
@@ -32,7 +32,7 @@ public class WalletTransactionController {
 
         User user = userService.findUserProfileByJwt(jwt);
         Wallet wallet = walletService.getUserWallet(user);
-        List<WalletTransaction> transactionList = walletTransactionService.getTransactionsByWallet(wallet);
+        List<WalletTransaction> transactionList = transactionService.getTransactionsByWallet(wallet);
 
         return new ResponseEntity<>(transactionList, HttpStatus.ACCEPTED);
 

@@ -6,9 +6,9 @@ import com.trade.domain.WalletTransactionType;
 import com.trade.model.Wallet;
 import com.trade.model.WalletTransaction;
 
-public interface WalletTransactionService {
+public interface TransactionService {
 
-    WalletTransaction createWalletTransaction(Wallet userWallet, WalletTransactionType type, String transferId,
+    WalletTransaction createWalletTransaction(Wallet userWallet, WalletTransactionType type, Long transferId,
             String description, Long walletId);
             
     List<WalletTransaction> getTransactionsByWallet(Wallet wallet);
