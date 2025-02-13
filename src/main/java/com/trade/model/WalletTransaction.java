@@ -1,6 +1,8 @@
 package com.trade.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import com.trade.domain.WalletTransactionType;
 
 import jakarta.persistence.Entity;
@@ -22,7 +24,7 @@ public class WalletTransaction {
 
     private WalletTransactionType type;
 
-    private LocalDate date;
+    private LocalDateTime date;
 
     private Long transferId;
 

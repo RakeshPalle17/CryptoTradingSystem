@@ -47,11 +47,11 @@ public class WithDrawalController {
         Withdrawal withdrawal = withdrawalService.requestWithDrawal(amount, user);
         walletService.addBalance(userWallet, -withdrawal.getAmount());
 
-        transactionService.createWalletTransaction(
+        WalletTransaction walletTransaction = transactionService.createWalletTransaction(
                 userWallet,
                 WalletTransactionType.WITHDRAWAL, null,
                 "Bank Account Withdrawal",
-                amount);
+                withdrawal.getAmount());
 
         return new ResponseEntity<>(withdrawal, HttpStatus.OK);
     }
